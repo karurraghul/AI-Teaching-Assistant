@@ -13,6 +13,11 @@
       }
       }
     ],
+      "build": {
+    "env": {
+      "NPM_FLAGS": "--legacy-peer-deps"
+    }
+  },
     "routes": [
       {
         "src": "/api/(.*)",
