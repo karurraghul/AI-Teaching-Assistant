@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: ai_teaching_assistant
+Version: 1.0.0
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: python-multipart
+Requires-Dist: python-dotenv
+Requires-Dist: pydantic-settings
