@@ -7,9 +7,17 @@
       },
       {
         "src": "package.json",
-        "use": "@vercel/next"
+        "use": "@vercel/next",
+        "config": {
+        "installCommand": "npm install --legacy-peer-deps"
+      }
       }
     ],
+      "build": {
+    "env": {
+      "NPM_FLAGS": "--legacy-peer-deps"
+    }
+  },
     "routes": [
       {
         "src": "/api/(.*)",

@@ -54,8 +54,15 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        Button: ({ ...props }) => {
+          if (props.dir === 'prev') {
+            return <ChevronLeft className="h-4 w-4" />;
+          }
+          if (props.dir === 'next') {
+            return <ChevronRight className="h-4 w-4" />;
+          }
+          return <></>; // Return an empty fragment instead of null
+        },
       }}
       {...props}
     />

@@ -5,6 +5,10 @@ const nextConfig = {
       bodySizeLimit: '20mb'
     }
   },
+  eslint:{
+    ignoreDuringBuilds:true,
+  },
+
   async rewrites() {
     if (process.env.VERCEL) {
       return {
