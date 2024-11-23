@@ -31,6 +31,7 @@ export interface ApiKeys {
 export interface ApiKeyVerificationResponse {
   success: boolean;
   error?: string;
+  message?: string;
 }
 
 export interface ApiKeyModalProps {
