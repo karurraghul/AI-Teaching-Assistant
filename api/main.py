@@ -9,64 +9,29 @@ from api.routes.endpoints import router
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(
-    title="AI Teaching Assistant API",
-    description="API for processing audio lectures and generating educational content",
-    version="1.0.0"
-)
+app = FastAPI()
 
-# Define allowed origins
-ALLOWED_ORIGINS = [
-    "http://localhost:3000",                    # Local development
-    "https://*.vercel.app",                     # Vercel deployments
-    "https://*.render.com",                     # Render deployments
-]
-
-# Add CORS middleware with expanded configuration
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=[
+        "http://localhost:3000",
+        "https://*.vercel.app",
+        "https://*.render.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=[
-        "*",
-        "X-Deepgram-Key",
-        "X-Groq-Key",
-        "Content-Type",
-        "Authorization",
-    ],
-    expose_headers=["*"]
+    allow_headers=["*", "X-Deepgram-Key", "X-Groq-Key"],
 )
 
 # Include router with prefix
 app.include_router(router, prefix="/api")
 
-# Add health check endpoint
-@app.get("/health")
-async def health_check():
-    return {
-        "status": "healthy",
-        "version": "1.0.0",
-        "environment": os.getenv("ENVIRONMENT", "development")
-    }
+@app.get("/")
+def root():
+    return {"status": "ok"}
 
-# Startup event logging
 @app.on_event("startup")
 async def startup_event():
-    logger.info("Starting FastAPI application")
-    logger.info(f"Environment: {os.getenv('ENVIRONMENT', 'development')}")
-    logger.info(f"Allowed origins: {ALLOWED_ORIGINS}")
-
-# Get port from environment variable
-PORT = int(os.getenv("PORT", 10000))
-
-if __name__ == "__main__":
-    import uvicorn
-    logger.info(f"Starting uvicorn server on port {PORT}")
-    uvicorn.run(
-        "api.main:app",
-        host="0.0.0.0",
-        port=PORT,
-        reload=True,
-        log_level="info"
-    )
+    port = os.getenv("PORT", 10000)
+    logger.info(f"Starting application on port {port}")
