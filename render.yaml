@@ -4,9 +4,17 @@ services:
     name: ai-teaching-assistant
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python server.py
+    startCommand: python -m server
     envVars:
       - key: PYTHON_VERSION
         value: 3.9
       - key: PORT
         value: 10000
+      - key: HOST
+        value: 0.0.0.0
+    healthCheckPath: /
+    # Add these lines for better deployment control
+    autoDeploy: true
+    disk:
+      name: tmp
+      mountPath: /tmp
