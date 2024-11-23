@@ -4,6 +4,7 @@ import type { ErrorResponse, ApiKeyVerificationResponse } from '@/types/api';
 
 const FASTAPI_BASE_URL = 'https://ai-teaching-assistant-ir98.onrender.com';
 
+// app/api/verify-keys/route.ts
 export async function POST(request: Request) {
   try {
     const { deepgramKey, groqKey } = await request.json();
@@ -12,6 +13,7 @@ export async function POST(request: Request) {
 
     if (!deepgramKey || !groqKey) {
       return NextResponse.json({ 
+        success: false,
         detail: 'API keys are required',
         status: 400
       } as ErrorResponse, { status: 400 });
@@ -22,9 +24,12 @@ export async function POST(request: Request) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Deepgram-Key': deepgramKey,
-          'X-Groq-Key': groqKey,
-        }
+        },
+        // Send API keys in the body
+        body: JSON.stringify({
+          deepgramKey,
+          groqKey
+        })
       });
 
       const responseData = await verifyResponse.json();
@@ -32,12 +37,12 @@ export async function POST(request: Request) {
 
       if (!verifyResponse.ok) {
         return NextResponse.json({ 
+          success: false,
           detail: responseData.detail || 'Invalid API keys',
           status: verifyResponse.status
         } as ErrorResponse, { status: verifyResponse.status });
       }
 
-      // Only use the success property as per type definition
       const response = NextResponse.json({ 
         success: true
       } satisfies ApiKeyVerificationResponse);
@@ -57,6 +62,7 @@ export async function POST(request: Request) {
     } catch (error) {
       console.error('Verification error:', error);
       return NextResponse.json({ 
+        success: false,
         detail: 'Failed to verify API keys',
         status: 500
       } as ErrorResponse, { status: 500 });
@@ -64,6 +70,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Request processing error:', error);
     return NextResponse.json({ 
+      success: false,
       detail: 'Invalid request format',
       status: 400
     } as ErrorResponse, { status: 400 });

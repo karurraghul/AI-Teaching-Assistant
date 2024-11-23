@@ -1,9 +1,8 @@
 from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Header
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse,JSONResponse
 from api.services.audio_handler import AudioProcessingHandler
 from api.services.summarizer import generate_quiz
 from api.core.config import Settings,get_settings
-
 import logging
 import tempfile
 from pathlib import Path
@@ -169,35 +168,49 @@ async def create_quiz(
         )
 
 @router.post("/verify-keys")
-async def verify_keys(
-    request: Request,
-    x_deepgram_key: Optional[str] = Header(None, alias="X-Deepgram-Key"),
-    x_groq_key: Optional[str] = Header(None, alias="X-Groq-Key")
-):
-    if not x_deepgram_key or not x_groq_key:
-        raise HTTPException(
-            status_code=401,
-            detail="API keys are required"
-        )
-
+async def verify_keys(request: Request):
+    """Verify Deepgram and Groq API keys."""
     try:
-        logger.info("Verifying API keys...")
-        # Verify Deepgram key
-        deepgram = Deepgram(x_deepgram_key)
-        
-        # Verify Groq key
-        client = Groq(api_key=x_groq_key)
-        
-        logger.info("API keys verified successfully")
-        # Match the frontend type exactly
-        return {
-            "success": True
-        }
+        # Get the keys from request body
+        body = await request.json()
+        deepgram_key = body.get('deepgramKey')
+        groq_key = body.get('groqKey')
+
+        logger.info("Received verification request")
+
+        if not deepgram_key or not groq_key:
+            logger.error("Missing API keys")
+            return JSONResponse(
+                status_code=401,
+                content={"success": False, "detail": "API keys are required"}
+            )
+
+        try:
+            # Verify Deepgram key
+            logger.info("Verifying Deepgram key...")
+            deepgram = Deepgram(deepgram_key)
+            
+            # Verify Groq key
+            logger.info("Verifying Groq key...")
+            client = Groq(api_key=groq_key)
+            
+            logger.info("API keys verified successfully")
+            return {
+                "success": True
+            }
+            
+        except Exception as e:
+            logger.error(f"Key verification failed: {str(e)}")
+            return JSONResponse(
+                status_code=401,
+                content={"success": False, "detail": "Invalid API keys"}
+            )
+            
     except Exception as e:
-        logger.error(f"API key verification failed: {str(e)}")
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid API keys"
+        logger.error(f"Unexpected error: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "detail": str(e)}
         )
 
 @router.delete("/cleanup-session")
