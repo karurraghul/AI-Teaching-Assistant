@@ -2,7 +2,7 @@
 import os
 import logging
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware  
 from api.routes.endpoints import router
 
 # Setup logging
@@ -28,10 +28,21 @@ app.add_middleware(
 app.include_router(router, prefix="/api")
 
 @app.get("/")
-def root():
+async def root():
     return {"status": "ok"}
 
 @app.on_event("startup")
 async def startup_event():
-    port = os.getenv("PORT", 10000)
-    logger.info(f"Starting application on port {port}")
+    port = int(os.getenv("PORT", 10000))
+    host = "0.0.0.0"
+    logger.info(f"Starting application on {host}:{port}")
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 10000))
+    uvicorn.run(
+        "api.main:app",
+        host="0.0.0.0",
+        port=port,
+        reload=True
+    )
