@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ErrorResponse } from '@/types/api';
 
-const FASTAPI_BASE_URL = 'https://ai-teaching-assistant-ir98.onrender.com/api';
+const FASTAPI_BASE_URL = 'https://ai-teaching-assistant-ir98.onrender.com';
   
 
 export async function POST(request: NextRequest) {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Make request to FastAPI backend
-    const backendResponse = await fetch(`${FASTAPI_BASE_URL}/generate-quiz`, {
+    const backendResponse = await fetch(`${FASTAPI_BASE_URL}/api/generate-quiz`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

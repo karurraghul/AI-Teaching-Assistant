@@ -8,7 +8,7 @@ import type {
   SessionValidationResponse 
 } from '@/types/api';
 
-const FASTAPI_BASE_URL ='https://ai-teaching-assistant-ir98.onrender.com/api';
+const FASTAPI_BASE_URL ='https://ai-teaching-assistant-ir98.onrender.com';
  
 
 // app/api/session/route.ts
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     backendFormData.append('audio_file', audioFile);
 
     console.log('Processing audio with Deepgram...');
-    const backendResponse = await fetch(`${FASTAPI_BASE_URL}/process-audio`, {
+    const backendResponse = await fetch(`${FASTAPI_BASE_URL}/api/process-audio`, {
       method: 'POST',
       headers: {
         'X-Deepgram-Key': deepgramKey,
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     // First, call the cleanup endpoint
-    const cleanupResponse = await fetch(`${FASTAPI_BASE_URL}/cleanup-session`, {
+    const cleanupResponse = await fetch(`${FASTAPI_BASE_URL}/api/cleanup-session`, {
       method: 'DELETE',
     });
 
@@ -176,7 +176,7 @@ export async function GET(request: NextRequest) {
       try {
         console.log('Calling FastAPI download endpoint with keys');
         const response = await fetch(
-          `${FASTAPI_BASE_URL}/download/notes/${filename}`,
+          `${FASTAPI_BASE_URL}/api/download/notes/${filename}`,
           {
             headers: {
               'X-Deepgram-Key': deepgramKey,
