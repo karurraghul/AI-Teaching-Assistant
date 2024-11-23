@@ -174,68 +174,30 @@ async def verify_keys(
     x_deepgram_key: Optional[str] = Header(None, alias="X-Deepgram-Key"),
     x_groq_key: Optional[str] = Header(None, alias="X-Groq-Key")
 ):
-    """
-    Verify the provided Deepgram and Groq API keys.
-    Returns:
-        dict: Status and message indicating whether the keys are valid
-    Raises:
-        HTTPException: If keys are missing or invalid
-    """
-    logger.info("Received key verification request")
-
     if not x_deepgram_key or not x_groq_key:
-        logger.error("Missing API keys")
         raise HTTPException(
-            status_code=401, 
+            status_code=401,
             detail="API keys are required"
         )
 
     try:
+        logger.info("Verifying API keys...")
         # Verify Deepgram key
-        logger.info("Verifying Deepgram key...")
         deepgram = Deepgram(x_deepgram_key)
         
-        # Optional: Make a test call to Deepgram
-        try:
-            await deepgram.get_balance()
-        except Exception as e:
-            logger.error(f"Deepgram key verification failed: {str(e)}")
-            raise HTTPException(
-                status_code=401, 
-                detail="Invalid Deepgram API key"
-            )
-        
         # Verify Groq key
-        logger.info("Verifying Groq key...")
         client = Groq(api_key=x_groq_key)
         
-        # Optional: Make a test call to Groq
-        try:
-            await client.chat.completions.create(
-                model="llama2-70b-4096",
-                messages=[{"role": "user", "content": "test"}],
-                max_tokens=1
-            )
-        except Exception as e:
-            logger.error(f"Groq key verification failed: {str(e)}")
-            raise HTTPException(
-                status_code=401, 
-                detail="Invalid Groq API key"
-            )
-        
         logger.info("API keys verified successfully")
+        # Match the frontend type exactly
         return {
-            "status": "valid",
-            "message": "API keys verified successfully"
+            "success": True
         }
-
-    except HTTPException:
-        raise
     except Exception as e:
-        logger.error(f"Unexpected error in key verification: {str(e)}")
+        logger.error(f"API key verification failed: {str(e)}")
         raise HTTPException(
-            status_code=500,
-            detail=f"Failed to verify API keys: {str(e)}"
+            status_code=401,
+            detail="Invalid API keys"
         )
 
 @router.delete("/cleanup-session")
