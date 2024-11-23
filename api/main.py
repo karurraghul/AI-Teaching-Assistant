@@ -58,7 +58,7 @@ async def startup_event():
     logger.info(f"Allowed origins: {ALLOWED_ORIGINS}")
 
 # Get port from environment variable
-PORT = int(os.getenv("PORT", 8000))
+PORT = int(os.getenv("PORT", 10000))
 
 if __name__ == "__main__":
     import uvicorn
