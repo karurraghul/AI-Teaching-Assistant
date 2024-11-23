@@ -3,7 +3,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { ErrorResponse } from '@/types/api';
 
-const FASTAPI_BASE_URL = 'http://localhost:8000/api';
+const FASTAPI_BASE_URL = 'https://ai-teaching-assistant-ir98.onrender.com/api';
+  
 
 export async function POST(request: NextRequest) {
   try {

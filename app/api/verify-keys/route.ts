@@ -2,9 +2,7 @@
 import { NextResponse } from 'next/server';
 import type { ErrorResponse, ApiKeyVerificationResponse } from '@/types/api';
 
-const FASTAPI_BASE_URL = process.env.VERCEL 
-  ? 'https://ai-teaching-assistant-ir98.onrender.com/api'
-  : 'http://localhost:8000/api';
+const FASTAPI_BASE_URL = 'https://ai-teaching-assistant-ir98.onrender.com/api';
 
 export async function POST(request: Request) {
   try {

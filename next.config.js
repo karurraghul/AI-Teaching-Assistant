@@ -8,14 +8,13 @@ const nextConfig = {
   eslint:{
     ignoreDuringBuilds:true,
   },
-
   async rewrites() {
     if (process.env.VERCEL) {
       return {
         beforeFiles: [
           {
             source: '/api/:path*',
-            destination: '/api/:path*',  // This will route to your FastAPI backend on Vercel
+            destination: 'https://ai-teaching-assistant-ir98.onrender.com/api/:path*',  // This will route to your FastAPI backend on Vercel
           },
         ],
       };
