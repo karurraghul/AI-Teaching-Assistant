@@ -2,7 +2,6 @@
 import { NextResponse } from 'next/server';
 import type { ErrorResponse, ApiKeyVerificationResponse } from '@/types/api';
 
-// Direct URL to your Render backend
 const FASTAPI_BASE_URL = 'https://ai-teaching-assistant-ir98.onrender.com/api';
 
 export async function POST(request: Request) {
@@ -19,19 +18,13 @@ export async function POST(request: Request) {
     }
 
     try {
-      // Direct fetch to Render backend
       const verifyResponse = await fetch(`${FASTAPI_BASE_URL}/verify-keys`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-Deepgram-Key': deepgramKey,
           'X-Groq-Key': groqKey,
-        },
-        // Important: send the keys in the body as well
-        body: JSON.stringify({
-          deepgramKey,
-          groqKey
-        })
+        }
       });
 
       if (!verifyResponse.ok) {
@@ -50,7 +43,6 @@ export async function POST(request: Request) {
         success: true 
       } satisfies ApiKeyVerificationResponse);
 
-      // Set cookies with proper options
       const cookieOptions = {
         httpOnly: true,
         secure: true,
@@ -59,6 +51,9 @@ export async function POST(request: Request) {
         maxAge: 7200
       };
 
+      // Set both formats of cookies
+      response.cookies.set('DEEPGRAM_API_KEY', deepgramKey, cookieOptions);
+      response.cookies.set('GROQ_API_KEY', groqKey, cookieOptions);
       response.cookies.set('x-deepgram-key', deepgramKey, cookieOptions);
       response.cookies.set('x-groq-key', groqKey, cookieOptions);
 
@@ -71,7 +66,6 @@ export async function POST(request: Request) {
         status: 500
       } as ErrorResponse, { status: 500 });
     }
-    
   } catch (error) {
     console.error('Request processing error:', error);
     return NextResponse.json({ 
