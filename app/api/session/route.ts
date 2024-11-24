@@ -1,5 +1,4 @@
 // app/api/session/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import type { 
   AudioProcessingResponse, 
@@ -8,10 +7,8 @@ import type {
   SessionValidationResponse 
 } from '@/types/api';
 
-const FASTAPI_BASE_URL ='https://ai-teaching-assistant-ir98.onrender.com';
- 
+const BACKEND_URL = 'https://ai-teaching-assistant-ir98.onrender.com';
 
-// app/api/session/route.ts
 export async function POST(request: NextRequest) {
   try {
     const contentType = request.headers.get('content-type') || '';
@@ -24,7 +21,6 @@ export async function POST(request: NextRequest) {
       } as ErrorResponse, { status: 400 });
     }
 
-    // Get API keys from cookies
     const deepgramKey = request.cookies.get('DEEPGRAM_API_KEY')?.value;
     const groqKey = request.cookies.get('GROQ_API_KEY')?.value;
 
@@ -45,12 +41,11 @@ export async function POST(request: NextRequest) {
       } as ErrorResponse, { status: 400 });
     }
 
-    // Create new FormData with the original file
     const backendFormData = new FormData();
     backendFormData.append('audio_file', audioFile);
 
-    console.log('Processing audio with Deepgram...');
-    const backendResponse = await fetch(`${FASTAPI_BASE_URL}/api/process-audio`, {
+    console.log('Making request to:', `${BACKEND_URL}/api/process-audio`);
+    const backendResponse = await fetch(`${BACKEND_URL}/api/process-audio`, {
       method: 'POST',
       headers: {
         'X-Deepgram-Key': deepgramKey,
@@ -79,16 +74,13 @@ export async function POST(request: NextRequest) {
       } as ErrorResponse, { status: 500 });
     }
 
-    // Create properly typed response
-    const response: AudioProcessingResponse = {
+    return NextResponse.json({
       success: true,
       transcript: audioData.transcript,
       notes_file: audioData.notes_file || null,
       message: 'Audio processed successfully',
       quiz: { questions: [] }
-    };
-
-    return NextResponse.json(response);
+    } satisfies AudioProcessingResponse);
 
   } catch (error) {
     console.error('Error in session/route:', error);
@@ -101,14 +93,12 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    // First, call the cleanup endpoint
-    const cleanupResponse = await fetch(`${FASTAPI_BASE_URL}/api/cleanup-session`, {
+    const cleanupResponse = await fetch(`${BACKEND_URL}/api/cleanup-session`, {
       method: 'DELETE',
     });
 
     if (!cleanupResponse.ok) {
       console.error('Storage cleanup failed');
-      // Continue with cookie cleanup even if storage cleanup fails
     }
 
     const cleanupData = await cleanupResponse.json();
@@ -126,7 +116,6 @@ export async function DELETE(request: NextRequest) {
       }
     );
 
-    // List of all cookies to clear
     const cookiesToClear = [
       'DEEPGRAM_API_KEY',
       'GROQ_API_KEY',
@@ -135,7 +124,6 @@ export async function DELETE(request: NextRequest) {
       'ajs_anonymous_id'
     ];
 
-    // Clear all cookies
     cookiesToClear.forEach(cookieName => {
       response.cookies.delete(cookieName);
     });
@@ -157,7 +145,6 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const pathParts = url.pathname.split('/');
     
-    // Check if this is a notes download request
     if (pathParts.includes('download') && pathParts.includes('notes')) {
       const filename = pathParts[pathParts.length - 1];
       const deepgramKey = request.cookies.get('DEEPGRAM_API_KEY')?.value;
@@ -174,9 +161,9 @@ export async function GET(request: NextRequest) {
       }
 
       try {
-        console.log('Calling FastAPI download endpoint with keys');
+        console.log('Making request to:', `${BACKEND_URL}/api/download/notes/${filename}`);
         const response = await fetch(
-          `${FASTAPI_BASE_URL}/api/download/notes/${filename}`,
+          `${BACKEND_URL}/api/download/notes/${filename}`,
           {
             headers: {
               'X-Deepgram-Key': deepgramKey,
@@ -213,7 +200,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Regular session validation
     const deepgramKey = request.cookies.get('DEEPGRAM_API_KEY');
     const groqKey = request.cookies.get('GROQ_API_KEY');
     
@@ -226,7 +212,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json({
       isValid
-    } as SessionValidationResponse);
+    } satisfies SessionValidationResponse);
   } catch (error) {
     console.error('Error in GET handler:', error);
     return NextResponse.json({ 
