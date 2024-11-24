@@ -4,12 +4,11 @@ import type { ErrorResponse, ApiKeyVerificationResponse } from '@/types/api';
 
 const FASTAPI_BASE_URL = 'https://ai-teaching-assistant-ir98.onrender.com';
 
-// app/api/verify-keys/route.ts
 export async function POST(request: Request) {
   try {
     const { deepgramKey, groqKey } = await request.json();
     
-    console.log('Attempting to verify keys');
+    console.log('Attempting to verify keys at:', `${FASTAPI_BASE_URL}/api/verify-keys`);
 
     if (!deepgramKey || !groqKey) {
       return NextResponse.json({ 
@@ -24,15 +23,24 @@ export async function POST(request: Request) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        // Send API keys in the body
         body: JSON.stringify({
           deepgramKey,
           groqKey
-        })
+        }),
+        cache: 'no-store'
       });
 
-      const responseData = await verifyResponse.json();
+      let responseData;
+      const responseText = await verifyResponse.text();
+      try {
+        responseData = JSON.parse(responseText);
+      } catch (e) {
+        console.error('Failed to parse response:', responseText);
+        throw new Error('Invalid response from server');
+      }
+
       console.log('Verification response:', responseData);
 
       if (!verifyResponse.ok) {
@@ -43,17 +51,21 @@ export async function POST(request: Request) {
         } as ErrorResponse, { status: verifyResponse.status });
       }
 
+      // Create the response first
       const response = NextResponse.json({ 
         success: true
       } satisfies ApiKeyVerificationResponse);
 
+      // Set cookies with options
       const cookieOptions = {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax' as const,
-        path: '/'
+        path: '/',
+        maxAge: 7200 // 2 hours
       };
 
+      // Set cookies after successful verification
       response.cookies.set('DEEPGRAM_API_KEY', deepgramKey, cookieOptions);
       response.cookies.set('GROQ_API_KEY', groqKey, cookieOptions);
 
@@ -63,7 +75,7 @@ export async function POST(request: Request) {
       console.error('Verification error:', error);
       return NextResponse.json({ 
         success: false,
-        detail: 'Failed to verify API keys',
+        detail: error instanceof Error ? error.message : 'Failed to verify API keys',
         status: 500
       } as ErrorResponse, { status: 500 });
     }
