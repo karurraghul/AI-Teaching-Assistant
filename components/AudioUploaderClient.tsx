@@ -96,7 +96,7 @@ export default function AudioUploaderClient({ onSuccess }: AudioUploaderClientPr
         setUploadProgress(prev => Math.min(prev + 10, 90));
       }, 500);
 
-      const response = await fetch('/api/session', {
+      const response = await fetch('api/session', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
