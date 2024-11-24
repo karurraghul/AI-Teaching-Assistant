@@ -180,9 +180,9 @@ async def verify_keys(request: Request):
 
         if not deepgram_key or not groq_key:
             logger.error("Missing API keys")
-            return JSONResponse(
+            raise HTTPException(
                 status_code=401,
-                content={"success": False, "detail": "API keys are required"}
+                detail="API keys are required"
             )
 
         try:
@@ -201,16 +201,18 @@ async def verify_keys(request: Request):
             
         except Exception as e:
             logger.error(f"Key verification failed: {str(e)}")
-            return JSONResponse(
+            raise HTTPException(
                 status_code=401,
-                content={"success": False, "detail": "Invalid API keys"}
+                detail="Invalid API keys"
             )
             
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Unexpected error: {str(e)}")
-        return JSONResponse(
+        raise HTTPException(
             status_code=500,
-            content={"success": False, "detail": str(e)}
+            detail=str(e)
         )
 
 @router.delete("/cleanup-session")
