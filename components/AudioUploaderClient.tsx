@@ -46,7 +46,7 @@ export default function AudioUploaderClient({ onSuccess }: AudioUploaderClientPr
         method: 'GET',
         credentials: 'same-origin'
       });
-
+        console.log(response)
       if (!response.ok) {
         throw new Error('Failed to validate session');
       }
@@ -74,6 +74,7 @@ export default function AudioUploaderClient({ onSuccess }: AudioUploaderClientPr
 
     try {
       const sessionState = await checkSession();
+      console.log(sessionState)
       if (!sessionState.isValid) {
         toast({
           title: "Session Error",
