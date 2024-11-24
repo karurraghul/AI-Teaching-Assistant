@@ -1,7 +1,5 @@
 # 🎓 AI Teaching Assistant 🤖
 
-![AI Teaching Assistant Banner](path-to-banner-image.png)
-
 > Transform your audio lectures into interactive learning materials with AI magic! ✨
 
 ## 🌟 What Makes Us Special
