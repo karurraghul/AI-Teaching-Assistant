@@ -46,15 +46,12 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Features Grid - Reformatted for 3 cards */}
+          {/* Features Grid - Without hover effects */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-scaleIn">
             {features.map((feature, index) => (
-              <Card 
-                key={index} 
-                className="group hover:shadow-lg transition-all duration-300 hover:scale-105"
-              >
+              <Card key={index}>
                 <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-                  <div className="p-3 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors">
+                  <div className="p-3 rounded-full bg-primary/5">
                     {feature.icon}
                   </div>
                   <div>
