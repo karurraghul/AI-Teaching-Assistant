@@ -1,84 +1,78 @@
-# AI Teaching Assistant 🤖📚
+# 🎓 AI Teaching Assistant 🤖
 
-An innovative application that transforms audio lectures into interactive learning materials using AI. This project leverages the power of Deepgram for audio transcription and Groq for AI-powered content generation.
+![AI Teaching Assistant Banner](path-to-banner-image.png)
 
-## Features ✨
+> Transform your audio lectures into interactive learning materials with AI magic! ✨
 
-### Core Functionalities
-- **Audio Processing** 
-  - Support for MP3, WAV, M4A formats
-  - Maximum file size: 20MB
-  - Real-time transcription using Deepgram API
+## 🌟 What Makes Us Special
 
-### Generated Content
-- **Lecture Notes**
-  - Automated transcription
-  - Structured chapter organization
-  - Downloadable Word documents (.docx)
-  - Key points extraction
-  - Timestamp markers
+Our application combines the power of:
+- 🎙️ Deepgram's audio transcription
+- 🧠 Groq's AI processing
+- 📚 Intelligent content organization
 
-- **Interactive Quizzes**
-  - AI-generated questions based on lecture content
-  - Multiple-choice format
-  - Customizable number of questions
-  - Topic-focused question generation
+## 🎯 Core Features
 
-### Security & Session Management
-- **API Key Management**
-  - Secure storage of Deepgram and Groq API keys
-  - Session-based key management
-  - Automatic session cleanup
-  - Key verification system
+### 🎵 Audio Processing 
+- 📀 Supported Formats: MP3, WAV, M4A
+- 📦 Max File Size: 20MB
+- ⚡ Real-time Processing
 
-### Technical Features
-- **Backend (FastAPI)**
-  - RESTful API architecture
-  - Async request handling
-  - File storage management
-  - Error handling and logging
-  - CORS configuration
+### 📝 Smart Content Generation
+#### 📚 Lecture Notes
+- 🤖 AI-powered transcription
+- 📑 Structured chapters
+- ⬇️ DOCX downloads
+- 🔑 Key points extraction
+- ⏰ Smart timestamps
 
-- **Frontend (Next.js)**
-  - Modern React components
-  - Server-side API routes
-  - Responsive design
-  - Real-time processing feedback
-  - Session management
+#### 📋 Interactive Quizzes
+- 🤔 AI-generated questions
+- ✅ Multiple choice format
+- 🔄 Customizable options
+- 🎯 Topic-focused
 
-## Technology Stack 🛠
+### 🔐 Security & Session Management
+- 🔑 Secure API key storage
+- 🕒 Session management
+- 🧹 Auto cleanup
+- ✅ Key verification
 
-### Frontend
-- Next.js 14
-- React
-- TypeScript
-- TailwindCSS
-- ShadcnUI Components
+## 🛠️ Tech Stack
 
-### Backend
-- FastAPI
-- Python 3.9+
-- Pydantic
-- uvicorn
+### 🎨 Frontend
+![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![React](https://img.shields.io/badge/React-18-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-blue)
 
-### AI Services
-- Deepgram API (Audio transcription)
-- Groq API (Content generation)
+### ⚙️ Backend
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green)
+![Python](https://img.shields.io/badge/Python-3.9+-blue)
+![Pydantic](https://img.shields.io/badge/Pydantic-2-green)
 
-### Deployment
-- Frontend: Vercel
-- Backend: Render
+### 🧠 AI Services
+- 🎤 Deepgram API
+- 🤖 Groq API
 
-## Getting Started 🚀
+### ☁️ Deployment
+- 🚀 Frontend: Vercel
+- ⚡ Backend: Render
 
-### Prerequisites
+## 🚀 Getting Started
+
+### 📋 Prerequisites
 ```bash
-# Node.js 18+ and Python 3.9+
-npm install
-pip install -r requirements.txt
+# 🔧 Installation
+npm install            # Frontend dependencies
+pip install -r requirements.txt  # Backend dependencies
 
-# Backend
+
+# 🔧 Backend
 uvicorn api.main:app --reload --port 8000
 
-# Frontend
+# 🎨 Frontend
 npm run dev
+
+📄 License
+MIT © [Raghul K R]
