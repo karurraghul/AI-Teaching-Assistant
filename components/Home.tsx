@@ -39,7 +39,7 @@ export default function Home() {
   const performCleanup = async () => {
     clearSecureApiKeys();
     try {
-      await fetch('/api/session', { method: 'DELETE' });
+      await fetch('https://ai-teaching-assistant-ir98.onrender.com/api/session', { method: 'DELETE' });
     } catch (error) {
       console.error('Cleanup failed:', error);
     }
@@ -154,7 +154,7 @@ export default function Home() {
         clearSecureApiKeys();
   
         // Clear server-side session
-        const response = await fetch('/api/session', {
+        const response = await fetch('https://ai-teaching-assistant-ir98.onrender.com/api/session', {
           method: 'DELETE',
         });
   

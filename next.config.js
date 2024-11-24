@@ -5,8 +5,8 @@ const nextConfig = {
       bodySizeLimit: '20mb'
     }
   },
-  eslint:{
-    ignoreDuringBuilds:true,
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 
   async rewrites() {
@@ -14,8 +14,9 @@ const nextConfig = {
     
     return [
       {
-        source: '/api/:path*',  // Keep as /api since that's what your routes use
+        source: '/api/:path*',
         destination: `${BACKEND_URL}/api/:path*`,
+        basePath: false
       }
     ];
   }
